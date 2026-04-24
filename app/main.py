@@ -31,15 +31,16 @@ async def lifespan(_: FastAPI):
 
 
 app = FastAPI(title=settings.app_name, debug=settings.debug, lifespan=lifespan)
-logger.info(f"Allowed CORS Origins: {settings.cors_origins}")
+logger.info(f"CORS SETTINGS - Origins: {settings.cors_origins}")
+logger.info(f"CORS SETTINGS - Methods: {settings.cors_allow_methods}")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.cors_origins,
-    allow_credentials=settings.cors_allow_credentials,
-    allow_methods=settings.cors_allow_methods,
-    allow_headers=settings.cors_allow_headers,
-    expose_headers=settings.cors_expose_headers,
+    allow_origins=["*"],  # Temporarily allow all for debugging
+    allow_credentials=False, # Must be False if using "*"
+    allow_methods=["*"],
+    allow_headers=["*"],
+    expose_headers=["*"],
 )
 
 @app.get("/health")
