@@ -4,6 +4,20 @@ from typing import Any
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 
+# Fix for Passlib + Bcrypt 4.0.0+ compatibility
+import logging
+try:
+    from passlib.handlers.bcrypt import _bcrypt
+    if _bcrypt:
+        try:
+            _bcrypt.__about__
+        except AttributeError:
+            class about:
+                __version__ = getattr(_bcrypt, "__version__", "4.0.0")
+            _bcrypt.__about__ = about
+except ImportError:
+    pass
+
 from app.core.config import get_settings
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
