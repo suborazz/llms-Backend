@@ -30,7 +30,7 @@ class Settings(BaseSettings):
     default_super_admin_last_name: str = Field(default="Admin")
     default_super_admin_mob_no: str = Field(default="9999999999")
 
-    cors_origins: Annotated[list[str], NoDecode] = Field(default_factory=lambda: ["https://lms-institute-psi.vercel.app"])
+    cors_origins: Annotated[list[str], NoDecode] = Field(default_factory=lambda: ["https://lms-institute-psi.vercel.app", "https://llmsfontrnd.vercel.app"])
     cors_allow_credentials: bool = Field(default=True)
     cors_allow_methods: Annotated[list[str], NoDecode] = Field(default_factory=lambda: ["*"])
     cors_allow_headers: Annotated[list[str], NoDecode] = Field(default_factory=lambda: ["*"])
