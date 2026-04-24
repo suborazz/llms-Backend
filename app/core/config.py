@@ -42,6 +42,22 @@ class Settings(BaseSettings):
         extra="ignore",
     )
 
+    @field_validator("database_url", mode="before")
+    @classmethod
+    def assemble_db_url(cls, v: str | None) -> str:
+        if not v:
+            return "postgresql+psycopg://postgres:postgres@localhost:5432/lms_db"
+        
+        # Handle Render/Heroku postgres:// prefix
+        if v.startswith("postgres://"):
+            v = v.replace("postgres://", "postgresql://", 1)
+        
+        # Ensure we use psycopg3 (v3) as the driver if not specified
+        if v.startswith("postgresql://"):
+            v = v.replace("postgresql://", "postgresql+psycopg://", 1)
+            
+        return v
+
     @field_validator(
         "cors_origins",
         "cors_allow_methods",
