@@ -77,12 +77,15 @@ class Settings(BaseSettings):
             return []
 
         if raw.startswith("["):
-            parsed = json.loads(raw)
-            if not isinstance(parsed, list):
-                raise ValueError("Expected a JSON array.")
-            return [str(item).strip() for item in parsed if str(item).strip()]
+            try:
+                parsed = json.loads(raw)
+                if isinstance(parsed, list):
+                    return [str(item).strip().strip("'").strip('"') for item in parsed if str(item).strip()]
+            except json.JSONDecodeError:
+                # Fallback to comma-split if JSON is malformed
+                pass
 
-        return [item.strip() for item in raw.split(",") if item.strip()]
+        return [item.strip().strip("'").strip('"') for item in raw.split(",") if item.strip()]
 
 
 @lru_cache

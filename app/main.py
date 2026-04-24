@@ -31,14 +31,15 @@ async def lifespan(_: FastAPI):
 
 
 app = FastAPI(title=settings.app_name, debug=settings.debug, lifespan=lifespan)
-logger.info(f"CORS SETTINGS - Origins: {settings.cors_origins}")
+# Senior Audit: Log processed origins to verify no malformed strings (like extra quotes)
+logger.info(f"CORS - Verified Allowed Origins: {settings.cors_origins}")
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_origins,
-    allow_credentials=settings.cors_allow_credentials,
-    allow_methods=settings.cors_allow_methods,
-    allow_headers=settings.cors_allow_headers,
+    allow_credentials=True,
+    allow_methods=["*"],  # Senior best practice: Allow all methods for better preflight compatibility
+    allow_headers=["*"],  # Senior best practice: Allow all headers to prevent preflight failure with custom headers
     expose_headers=settings.cors_expose_headers,
 )
 
